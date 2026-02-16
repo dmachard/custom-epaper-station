@@ -157,23 +157,23 @@ function handleIncomingJson(data) {
         fullStore = data;
 
         // Sync UI with fullStore
-        if (data.wifi_ssid !== undefined) document.getElementById('ssid').value = data.wifi_ssid;
-        if (data.ntp_srv !== undefined) document.getElementById('ntpServer').value = data.ntp_srv;
-        if (data.ntp_gmt !== undefined) document.getElementById('gmtOffset').value = data.ntp_gmt;
-        if (data.ntp_dst !== undefined) document.getElementById('dstOffset').value = data.ntp_dst;
-        if (data.dns_mode !== undefined) {
-            const radio = document.querySelector(`input[name="dnsMode"][value="${data.dns_mode}"]`);
+        if (data.ssid !== undefined) document.getElementById('ssid').value = data.ssid;
+        if (data.ntpServer !== undefined) document.getElementById('ntpServer').value = data.ntpServer;
+        if (data.gmt !== undefined) document.getElementById('gmtOffset').value = data.gmt;
+        if (data.dst !== undefined) document.getElementById('dstOffset').value = data.dst;
+        if (data.dnsMode !== undefined) {
+            const radio = document.querySelector(`input[name="dnsMode"][value="${data.dnsMode}"]`);
             if (radio) radio.checked = true;
-            document.getElementById('manualDnsFields').classList.toggle('hidden', data.dns_mode !== 'manual');
+            document.getElementById('manualDnsFields').classList.toggle('hidden', data.dnsMode !== 'manual');
         }
-        if (data.dns_pri !== undefined) document.getElementById('dnsPrimary').value = data.dns_pri;
-        if (data.dns_sec !== undefined) document.getElementById('dnsSecondary').value = data.dns_sec;
-        if (data.tempus_url !== undefined) document.getElementById('tempusUrl').value = data.tempus_url;
-        if (data.ble_timeout !== undefined) document.getElementById('bleTimeout').value = data.ble_timeout;
-        if (data.sensor_interval !== undefined) document.getElementById('sensorInterval').value = data.sensor_interval;
-        if (data.sens_style !== undefined) document.getElementById('styleSelector').value = data.sens_style;
-        if (data.language !== undefined) {
-            currentLang = data.language;
+        if (data.dnsPrimary !== undefined) document.getElementById('dnsPrimary').value = data.dnsPrimary;
+        if (data.dnsSecondary !== undefined) document.getElementById('dnsSecondary').value = data.dnsSecondary;
+        if (data.tempusUrl !== undefined) document.getElementById('tempusUrl').value = data.tempusUrl;
+        if (data.bleTimeout !== undefined) document.getElementById('bleTimeout').value = data.bleTimeout;
+        if (data.sensorInterval !== undefined) document.getElementById('sensorInterval').value = data.sensorInterval;
+        if (data.style !== undefined) document.getElementById('styleSelector').value = data.style;
+        if (data.lang !== undefined) {
+            currentLang = data.lang;
             updateLanguage();
         }
 
