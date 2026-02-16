@@ -1,0 +1,30 @@
+
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+*.elf
+*.bin
+*.hex
+*.map
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+._*
+
+# Node / Web
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Private Configs (if any)
+# secrets.h 
+
+# Build artifacts
+build/
+dist/

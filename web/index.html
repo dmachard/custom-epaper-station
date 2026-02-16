@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom E-Paper Station</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    <link rel="apple-touch-icon" href="icon-192.png">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1 data-i18n="app_title">Custom E-Paper Station</h1>
+            <div class="header-controls">
+                <button id="disconnectBtn" class="btn-sm hidden" data-i18n="btn_disconnect">Disconnect</button>
+                <div id="connectionStatus" class="status-badge disconnected" data-i18n="status_disconnected">
+                    Disconnected</div>
+            </div>
+        </header>
+
+        <nav class="tabs" id="tabNav" style="display: none;">
+            <a href="#network" class="tab" data-tab="network" data-i18n="tab_network">Network</a>
+            <a href="#system" class="tab" data-tab="system" data-i18n="tab_system">System</a>
+            <a href="#events" class="tab" data-tab="events" data-i18n="tab_events">Events</a>
+            <a href="#sensors" class="tab" data-tab="sensors" data-i18n="tab_sensors">Sensors</a>
+        </nav>
+
+        <main>
+            <!-- Connection Screen -->
+            <div id="connectScreen" class="screen">
+                <div id="connectSpinner" class="loading-container hidden">
+                    <div class="spinner"></div>
+                    <p data-i18n="status_connecting">Connecting...</p>
+                </div>
+                <button id="connectBtn" class="btn-primary" data-i18n="btn_connect">Connect to Device</button>
+            </div>
+
+
+
+            <div id="tab-network" class="tab-content hidden">
+                <div class="card">
+                    <h2 data-i18n="wifi_config_title">WiFi Configuration</h2>
+                    <div class="form-group">
+                        <label for="ssid" data-i18n="wifi_ssid_label">SSID</label>
+                        <input type="text" id="ssid" placeholder="WiFi Network Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" data-i18n="wifi_pass_label">Password</label>
+                        <input type="password" id="password" placeholder="WiFi Password">
+                    </div>
+                    <button id="saveWifiBtn" class="btn-primary" data-i18n="save_wifi_btn">Save WiFi</button>
+                </div>
+
+                <div class="card">
+                    <h2 data-i18n="dns_config_title">DNS Configuration</h2>
+                    <div class="form-group">
+                        <label data-i18n="dns_mode_label">Mode</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="dnsMode" value="auto" checked>
+                                <span data-i18n="dns_auto">Automatic (DHCP)</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="dnsMode" value="manual">
+                                <span data-i18n="dns_manual">Manual</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div id="manualDnsFields" class="hidden">
+                        <div class="form-group">
+                            <label for="dnsPrimary" data-i18n="dns_primary_label">Primary DNS</label>
+                            <input type="text" id="dnsPrimary" placeholder="8.8.8.8">
+                        </div>
+                        <div class="form-group">
+                            <label for="dnsSecondary" data-i18n="dns_secondary_label">Secondary DNS</label>
+                            <input type="text" id="dnsSecondary" placeholder="1.1.1.1">
+                        </div>
+                    </div>
+                    <button id="saveDnsBtn" class="btn-primary" data-i18n="save_dns_btn">Save DNS</button>
+                </div>
+                <div class="card">
+                    <h2 data-i18n="ntp_config_title">NTP Configuration</h2>
+                    <div class="form-group">
+                        <label for="ntpServer" data-i18n="ntp_server_label">NTP Server</label>
+                        <input type="text" id="ntpServer" placeholder="pool.ntp.org">
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="gmtOffset" data-i18n="gmt_offset_label">GMT Offset (hours)</label>
+                            <input type="number" id="gmtOffset" value="1" step="0.5">
+                        </div>
+                        <div class="form-group">
+                            <label for="dstOffset" data-i18n="dst_offset_label">DST Offset (hours)</label>
+                            <input type="number" id="dstOffset" value="1" step="0.5">
+                        </div>
+                    </div>
+                    <button id="saveNtpBtn" class="btn-primary" data-i18n="save_ntp_btn">Save NTP</button>
+                </div>
+            </div>
+
+            <!-- Tab: Events -->
+            <div id="tab-events" class="tab-content hidden">
+                <div class="card">
+                    <h2 data-i18n="tempus_config_title">Tempus API Configuration</h2>
+                    <p class="hint" data-i18n="tempus_hint">Global configuration for Calendar, Trash, and Birthdays.</p>
+
+                    <div class="form-group">
+                        <label for="tempusUrl" data-i18n="api_url_label">API URL</label>
+                        <input type="text" id="tempusUrl" placeholder="http://192.168.1.x:9102/context">
+                    </div>
+
+                    <button id="saveTempusUrlBtn" class="btn-primary" data-i18n="save_url_btn">Save URL</button>
+                </div>
+            </div>
+
+            <!-- Tab: Sensors -->
+            <div id="tab-sensors" class="tab-content hidden">
+                <div class="card">
+                    <h2 data-i18n="global_sensor_settings_title">Global Sensor Settings</h2>
+                    <div class="form-group">
+                        <label for="styleSelector">Display Style</label>
+                        <select id="styleSelector">
+                            <option value="0" data-i18n="style_grid">Grid (8)</option>
+                            <option value="1" data-i18n="style_circles">Circles (6)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sensorInterval" data-i18n="sensor_interval_label">Refresh Interval (seconds)</label>
+                        <input type="number" id="sensorInterval" min="10" max="3600" placeholder="60">
+                    </div>
+                    <button id="saveGlobalSensorBtn" class="btn-primary" data-i18n="save_global_sensor_btn">Save Global
+                        Settings</button>
+                </div>
+
+                <div class="card">
+                    <h3 data-i18n="select_sensor_title">Select a Sensor to Configure</h3>
+                    <div id="sensorQuickView" class="quick-view">
+                        <div class="quick-view-item" onclick="selectSlot(0)">Slot 0 <br><span id="qv0">--</span></div>
+                        <div class="quick-view-item" onclick="selectSlot(1)">Slot 1 <br><span id="qv1">--</span></div>
+                        <div class="quick-view-item" onclick="selectSlot(2)">Slot 2 <br><span id="qv2">--</span></div>
+                        <div class="quick-view-item" onclick="selectSlot(3)">Slot 3 <br><span id="qv3">--</span></div>
+                        <div class="quick-view-item" onclick="selectSlot(4)">Slot 4 <br><span id="qv4">--</span></div>
+                        <div class="quick-view-item" onclick="selectSlot(5)">Slot 5 <br><span id="qv5">--</span></div>
+                        <div class="quick-view-item" onclick="selectSlot(6)">Slot 6 <br><span id="qv6">--</span></div>
+                        <div class="quick-view-item" onclick="selectSlot(7)">Slot 7 <br><span id="qv7">--</span></div>
+                        <div class="quick-view-item" onclick="selectSlot(8)">Slot 8 <br><span id="qv8">--</span></div>
+                        <div class="quick-view-item" onclick="selectSlot(9)">Slot 9 <br><span id="qv9">--</span></div>
+                        <div class="quick-view-item" onclick="selectSlot(10)">Slot 10 <br><span id="qv10">--</span>
+                        </div>
+                        <div class="quick-view-item" onclick="selectSlot(11)">Slot 11 <br><span id="qv11">--</span>
+                        </div>
+                        <div class="quick-view-item" onclick="selectSlot(12)">Slot 12 <br><span id="qv12">--</span>
+                        </div>
+                        <div class="quick-view-item" onclick="selectSlot(13)">Slot 13 <br><span id="qv13">--</span>
+                        </div>
+                        <div class="quick-view-item" onclick="selectSlot(14)">Slot 14 <br><span id="qv14">--</span>
+                        </div>
+                        <div class="quick-view-item" onclick="selectSlot(15)">Slot 15 <br><span id="qv15">--</span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="card" id="sensorConfigCard">
+                    <h2 id="configTitle" data-i18n="configure_sensor_title">Configuration: Slot 0</h2>
+                    <div class="sensor-config">
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="sensorEnabled">
+                                <span data-i18n="enabled_label">Enabled</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sensorLabel" data-i18n="label_label">Label</label>
+                            <input type="text" id="sensorLabel" placeholder="e.g., Conso. EDF" maxlength="20">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sensorUnit" data-i18n="unit_label">Unit</label>
+                            <input type="text" id="sensorUnit" placeholder="e.g., kWh, °C, W" maxlength="10">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sensorType" data-i18n="source_type_label">Source Type</label>
+                            <select id="sensorType">
+                                <option value="prometheus">Prometheus</option>
+                                <option value="json">JSON API</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sensorUrl" data-i18n="url_label">URL</label>
+                            <textarea id="sensorUrl" rows="3" placeholder="http://..."></textarea>
+                        </div>
+
+                        <div class="form-group hidden" id="jsonPathGroup">
+                            <label for="sensorJsonPath" data-i18n="json_path_label">JSON Path</label>
+                            <input type="text" id="sensorJsonPath" placeholder="e.g. data.values[0]">
+                            <small data-i18n="json_path_hint">Use dot notation for objects and [] for arrays</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="sensorDivisor" data-i18n="divisor_label">Divisor</label>
+                                <input type="number" id="sensorDivisor" value="1" step="0.1" min="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="sensorDecimals" data-i18n="decimals_label">Decimals</label>
+                                <input type="number" id="sensorDecimals" value="1" min="0" max="2">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="saveSensorBtn" class="btn-primary" data-i18n="save_sensor_btn">Save
+                            Settings</button>
+                        <button id="clearSensorBtn" class="btn-danger" data-i18n="clear_sensor_btn">Clear Slot</button>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <!-- Tab: System -->
+            <div id="tab-system" class="tab-content hidden">
+                <div class="card">
+                    <h2 data-i18n="system_config_title">System Configuration</h2>
+
+                    <div class="form-group">
+                        <label for="bleTimeout" data-i18n="ble_timeout_label">BLE Timeout (minutes)</label>
+                        <input type="number" id="bleTimeout" min="1" max="60" placeholder="15">
+                        <p class="hint" data-i18n="ble_timeout_hint">Time before Bluetooth turns off automatically. Set
+                            to 0 to disable.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="languageSelector" data-i18n="language_label">Language</label>
+                        <select id="languageSelector">
+                            <option value="en">English</option>
+                            <option value="fr">Français</option>
+                        </select>
+                    </div>
+
+                    <button id="saveSysConfigBtn" class="btn-primary" data-i18n="save_sys_config_btn">Save System
+                        Config</button>
+                </div>
+            </div>
+        </main>
+
+        <div id="statusMessage" class="status-message"></div>
+    </div>
+
+    <script src="translations.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
