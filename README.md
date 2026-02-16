@@ -2,7 +2,7 @@
 
 A connected information display based on an **ESP32-C6** and a **4.2" E-Paper Screen**.
 
-<img src="station-epaper" alt="Custom epaper station" width="300">
+<img src="station-epaper.jpg" alt="Custom epaper station" width="300">
 
 ## 🌟 Features
 
@@ -12,7 +12,7 @@ A connected information display based on an **ESP32-C6** and a **4.2" E-Paper Sc
 *   **Connectivity**:
     *   **WiFi**: For data fetching methods.
     *   **Bluetooth LE (BLE)**: For easy configuration via a Web App.
-*   **Web Configuration App**:
+*   **Web Configuration App**
 
 ## 🛠️ Hardware
 
